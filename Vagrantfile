@@ -7,6 +7,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/trusty64"
   config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.define :vm_dockertools do |t|
+  end
   config.vm.network :forwarded_port, host: 4567, guest: 2376
   config.vm.synced_folder "~", "/home/vagrant/host"
 
@@ -29,6 +31,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     d.run "se74",
       cmd: "/bin/zsh",
       args: "-v /home/vagrant/host:/root -w /root -h se74 --name='se74' -i -t"
+  end
+
+  config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/navi", args: "-t='navi'"
+    d.run "navi",
+      cmd: "/bin/zsh",
+      args: "-v /home/vagrant/host:/root -w /root -h navi --name='navi' -i -t"
+  end
+
+  config.vm.provision "docker" do |d|
+    d.build_image "/vagrant/xmcli301", args: "-t='xmcli301'"
+    d.run "xmcli301",
+      cmd: "/bin/zsh",
+      args: "-v /home/vagrant/host:/root -w /root -h xmcli301 --name='xmcli301' -i -t"
   end
 
 end
