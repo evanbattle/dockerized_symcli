@@ -1,10 +1,12 @@
-# Dockerized SYMCLI
+# Dockerized CLI Tools (SYMCLI, NaviCLI, and XMCLI)
 
 If you work with offline SYMAPI databases frequently, you've probably encountered cases where you can't open a DMX SYMAPI database on a recent version of Solutions Enabler. Getting around this typically means you must maintain several different versions of Solutions Enabler, to ensure that you can read SYMAPI databases produced by DMX, VMAX, and VMAX^3 arrays at diverse code levels. And because only one instance/version of Solutions Enabler can be installed on any given OS instance, you end up building and maintaining several virtual machines, each with a different version of Solutions Enabler installed.
 
 Not that big of a deal, really. But it does get kind of annoying when the states of these virtual machines diverge over time. For example, when you manually install ad-hoc packages, change security settings, apply patches, modify your .dotfiles, etc.
 
 Also, every time you need to use a particular version of Solutions Enabler, you have to boot a virtual machine -- which takes a while, and chews up memory/CPU resources just to do the same thing your host OS is already doing -- and possibly just to do the same thing that other VMs you're hosting are also doing. In other words, you're dealing with the "VM Tax" -- there's a ton of 'effort duplication' going on here just to run a particular version of Solutions Enabler on your laptop.
+
+Additionally, there are other utilities from the CX/VNX and XtremIO lines that can be containerized to eliminate the headaches that can come along with various utilities dependencies stepping on each other.
 
 *Docker can make this much easier.*
 
@@ -21,6 +23,8 @@ I can think of a few good use cases:
 * Provides a safe "read-only" development sandbox for creating custom reports in environments with multiple generations of Symmetrix systems.
 * You're in an EMC or Partner pre-sales, post-sales, or support role, and you work with Symmetrix systems on a regular basis. [Offline SYMCLI](http://blog.scummins.com/?p=56) is a very useful for people who help other organizations install, manage, and support their VMAX arrays.
 * You work with Symmetrix systems on a regular basis, and you want to learn more about shiny new stuff like [Docker](https://docker.com/) and [Vagrant](https://www.vagrantup.com).
+* You frequently work with large number of VNX systems, or mount and manipulate NAR data on a regular basis using Naviseccli.
+* You simply want to avoid having to manually install all the utilities on your system, but want them at your fingertips.
 
 
 
@@ -30,7 +34,7 @@ Well, my new workflow is significantly simplified, and I no longer have to boot 
 
 ![](usage_screenshot.gif)
 
-The commands I used above ('se74', 'se76', 'and 'se8') are just aliases for starting and attaching to version-specific SE containers.
+The commands I used above ('se74', 'se76', 'se8', 'navi', 'and 'xmcli301') are just aliases for starting and attaching to version-specific containers.
 
 
 # How to set it up (things you have to do once)
@@ -58,13 +62,13 @@ cd Projects
 ~~~
 
 ## Step 3: Clone GitHub Repo
-Now that you're in your staging directory, you can clone [my GitHub repository](https://github.com/seancummins/dockerized_symcli.git) into your directory. You can do this via the 'git' CLI, or you can download one of the various git GUIs instead.
+Now that you're in your staging directory, you can clone [my GitHub repository](https://github.com/evanbattle/dockerized_symcli.git) into your directory. You can do this via the 'git' CLI, or you can download one of the various git GUIs instead.
 
 ~~~bash
-git clone https://github.com/seancummins/dockerized_symcli.git
+git clone https://github.com/evanbattle/dockerized_symcli.git
 ~~~
 
-## Step 4: Download Solutions Enabler Linux Binaries
+## Step 4: Download Solutions Enabler, NaviCLI, and XMCLI Linux Binaries
 Unfortunately this was one part of the setup I couldn't automate with Vagrant -- mainly because I can't distribute Solutions Enabler outside of the normal channel ([support.emc.com](http://support.emc.com)).
 
 You want the Linux binaries even if you're doing this on Mac or Windows, because Solutions Enabler will ultimately be running in a Linux container.
@@ -72,6 +76,8 @@ You want the Linux binaries even if you're doing this on Mac or Windows, because
 * Download [SE 8.0.1](https://download.emc.com/downloads/DL56471_Solutions-Enabler-8.0.1-for-Linux-x64.tar.gz) and move it into the "dockerized_symcli/se8" directory.
 * Download [SE 7.6](https://download.emc.com/downloads/DL53239_se7628-Linux-i386-ni.tar.gz.gz) and move it into the "dockerized_symcli/se76" directory.
 * Download [SE 7.4](https://download.emc.com/downloads/DL39938_se7400-Linux-i386-ni.tar.gz.tar.gz) and move it into the "dockerized_symcli/se74" directory.
+* Download [Naviseccli](https://download.emc.com/downloads/DL30837_Navisphere-CLI-(Linux-x64)-7.33.3.0.72.rpm) and move it into the "dockerized_symcli/navi" directory.
+* Download [XMCLI](https://download.emc.com/downloads/DL55583_XMCLI-Client-for-XtremIO-3.0.1-(3.0.1-11).tgz) and move it into the "dockerized_symcli/navi" directory.
 
 ## Step 5: Deploy
 
